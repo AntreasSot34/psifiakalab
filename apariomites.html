@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Απαριθμητές (Counters) — Σύγχρονοι, Ασύγχρονοι, BCD | Psifiaka Lab</title>
+  <meta name="description" content="Πλήρης θεωρία για ψηφιακούς απαριθμητές. Διαδραστικός δυαδικός μετρητής, mod-N counter, frequency divider. Ψηφιακά Ηλεκτρονικά ΙΙ Γ' Λυκείου.">
+  <meta name="keywords" content="απαριθμητές, counter, ασύγχρονοι, σύγχρονοι, BCD, mod N, up counter, down counter, διαιρέτης συχνότητας, Παγκύπριες Εξετάσεις, Γ Λυκείου, Β Λυκείου, τεχνική σχολή, Κύπρος, ιδιαίτερα μαθήματα, Πληροφορική, Antreas Sotiriou eLearning">
+  <link rel="canonical" href="https://psifiakalab.com/apariomites.html">
+  
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="el_GR">
+  <meta property="og:title" content="Απαριθμητές — Σύγχρονοι &amp; Ασύγχρονοι Counters">
+  <meta property="og:description" content="Διαδραστικές προσομοιώσεις για ψηφιακούς απαριθμητές.">
+  <meta property="og:url" content="https://psifiakalab.com/apariomites.html">
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LearningResource",
+    "name": "Απαριθμητές (Counters)",
+    "description": "Θεωρία και διαδραστικές ασκήσεις για ψηφιακούς απαριθμητές",
+    "educationalLevel": "Γ' Λυκείου",
+    "inLanguage": "el",
+    "learningResourceType": "Interactive lesson",
+    "isPartOf": { "@type": "Course", "name": "Ψηφιακά Ηλεκτρονικά ΙΙ" }
+  }
+  </script>
+  
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23ff5c39'/%3E%3Ctext x='50' y='68' font-family='monospace' font-size='55' font-weight='700' text-anchor='middle' fill='%231a1d2e'%3EΨ%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="assets/chapter-extras.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav-bar" aria-label="Κύρια πλοήγηση">
+      <a href="index.html" class="logo"><span class="logo-mark">Ψ</span><span>Psifiaka Lab</span></a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav">Μενού ☰</button>
+      <ul class="nav-list" id="primary-nav">
+        <li><a href="index.html">Αρχική</a></li>
+        <li><a href="flip-flop.html">1. Φλιπ-Φλοπ</a></li>
+        <li><a href="kyklomata-palmon.html">2. Πολυδονητές</a></li>
+        <li><a href="logikes-oikogeneies.html">3. Λογικές Οικογένειες</a></li>
+        <li><a href="apariomites.html">4. Απαριθμητές</a></li>
+        <li><a href="kataxoritres.html">5. Καταχωρητές</a></li>
+        <li><a href="kodikopoiites.html">6. Κωδικοποιητές</a></li>
+        <li><a href="sygkrites.html">7. Συγκριτές</a></li>
+        <li><a href="psifio-isotimias.html">8. Ψηφίο Ισοτιμίας</a></li>
+        <li><a href="polyplektes.html">9. Πολυπλέκτες</a></li>
+        <li><a href="metatropes-da-ad.html">10. Μετατροπείς D/A &amp; A/D</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="chapter-layout">
+    
+    <aside class="chapter-sidebar">
+      <h4>Σε αυτό το κεφάλαιο</h4>
+      <ul>
+        <li><a href="#eisagogi">Εισαγωγή</a></li>
+        <li><a href="#xaraktiristika">Χαρακτηριστικά</a></li>
+        <li><a href="#kateuthynsi">Κατεύθυνση</a></li>
+        <li><a href="#diadrastiko-binary">🎮 Δυαδικός Counter</a></li>
+        <li><a href="#metro">Μέτρο &amp; Mod-N</a></li>
+        <li><a href="#diadrastiko-modn">🎮 Mod-N Designer</a></li>
+        <li><a href="#asyghronoi">Ασύγχρονοι vs Σύγχρονοι</a></li>
+        <li><a href="#syxnotita">Διαιρέτης Συχνότητας</a></li>
+        <li><a href="#diadrastiko-freq">🎮 Frequency Divider</a></li>
+        <li><a href="#bcd">BCD Counter</a></li>
+        <li><a href="#pdf">📄 Διαφάνειες</a></li>
+      </ul>
+    </aside>
+
+    <main class="chapter-content">
+      
+      <header class="chapter-hero">
+        <span class="chapter-num">Κεφάλαιο 04</span>
+        <h1>Απαριθμητές (Counters)</h1>
+        <p class="lede">
+          Ένας <strong>απαριθμητής</strong> είναι ένα ψηφιακό κύκλωμα που <strong>μετράει παλμούς</strong>.
+          Είναι το συστατικό που μετατρέπει το χρόνο σε αριθμό — από το ψηφιακό ρολόι σου,
+          μέχρι το χρονόμετρο του φούρνου, μέχρι τους μετρητές γεγονότων.
+        </p>
+      </header>
+
+      <section id="eisagogi">
+        <div class="section-divider"><span class="badge">01</span></div>
+        <h2>Τι είναι ο απαριθμητής;</h2>
+        <p>
+          Ο απαριθμητής είναι μια αλυσίδα από <strong>Φλιπ-Φλοπ (συνήθως JK ή T)</strong>
+          συνδεδεμένα έτσι ώστε σε κάθε παλμό ρολογιού η συνολική τους κατάσταση να αλλάζει
+          με βάση μια συγκεκριμένη ακολουθία αριθμών.
+        </p>
+        <p>
+          Με <strong>n bits</strong> (δηλαδή n φλιπ-φλοπ) μπορούμε να μετρήσουμε
+          μέχρι <code>2<sup>n</sup></code> διαφορετικές καταστάσεις:
+        </p>
+        <ul>
+          <li>2 FF → 4 καταστάσεις (0–3)</li>
+          <li>3 FF → 8 καταστάσεις (0–7)</li>
+          <li>4 FF → 16 καταστάσεις (0–15)</li>
+        </ul>
+      </section>
+
+      <section id="xaraktiristika">
+        <div class="section-divider"><span class="badge">02</span></div>
+        <h2>Πέντε Βασικά Χαρακτηριστικά</h2>
+        <ol>
+          <li><strong>Κατεύθυνση αρίθμησης</strong>: Up, Down, ή Up/Down</li>
+          <li><strong>Κώδικας αρίθμησης</strong>: Δυαδικός (binary) ή BCD (Binary Coded Decimal)</li>
+          <li><strong>Αριθμός Φλιπ-Φλοπ</strong>: Καθορίζει το μέγιστο μέτρο</li>
+          <li><strong>Μέτρο (modulo)</strong>: Πόσες διαφορετικές καταστάσεις περνάει πριν επιστρέψει</li>
+          <li><strong>Χρονισμός</strong>: Ασύγχρονος ή Σύγχρονος</li>
+        </ol>
+      </section>
+
+      <section id="kateuthynsi">
+        <div class="section-divider"><span class="badge">03</span></div>
+        <h2>Κατεύθυνση Αρίθμησης</h2>
+        
+        <div class="cat-grid">
+          <div class="cat-card">
+            <div class="cat-icon" style="background:#d6ffe4;">⬆️</div>
+            <h3>Up Counter</h3>
+            <p>Μετράει αυξητικά: 0 → 1 → 2 → 3 → ...</p>
+          </div>
+          <div class="cat-card">
+            <div class="cat-icon" style="background:#ffd6d6;">⬇️</div>
+            <h3>Down Counter</h3>
+            <p>Μετράει μειωτικά: 7 → 6 → 5 → 4 → ...</p>
+          </div>
+          <div class="cat-card">
+            <div class="cat-icon" style="background:#fff4d6;">↕️</div>
+            <h3>Up/Down Counter</h3>
+            <p>Επιλέγεις μέσω σήματος ελέγχου σε ποια κατεύθυνση θα μετράει.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="diadrastiko-binary">
+        <div class="section-divider"><span class="badge">🎮</span></div>
+        <h2>Διαδραστικό: Δυαδικός Απαριθμητής</h2>
+        
+        <div class="interactive">
+          <span class="interactive-label">Πάτα το ρολόι!</span>
+          <h3>Δες τα bits να μετράνε</h3>
+          <p class="interactive-explainer">
+            Επίλεξε τον αριθμό <strong>bits (FF)</strong> και την <strong>κατεύθυνση</strong>.
+            Πάτα <strong>Παλμός Ρολογιού</strong> για να προχωρήσεις τον απαριθμητή κατά 1.
+            Παρατήρησε πως κάθε παλμός αλλάζει το LSB (Q₀), ενώ τα ανώτερα bits αλλάζουν λιγότερο συχνά.
+          </p>
+          
+          <div class="sliders">
+            <div class="slider-row">
+              <label for="bin-bits">Αριθμός Bits</label>
+              <input type="range" id="bin-bits" min="2" max="4" step="1" value="3">
+              <output id="bin-bits-val" class="mono">3 bits</output>
+            </div>
+            <div class="slider-row">
+              <label for="bin-dir">Κατεύθυνση</label>
+              <select id="bin-dir" class="select-input" style="grid-column: 2 / span 2;">
+                <option value="up">⬆️ Up</option>
+                <option value="down">⬇️ Down</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="results-grid">
+            <div class="result-card"><div class="result-label">Δεκαδική</div><div class="result-value" id="bin-dec">0</div></div>
+            <div class="result-card"><div class="result-label">Δυαδική</div><div class="result-value mono" id="bin-bin" style="font-size:1.4rem;">000</div></div>
+            <div class="result-card"><div class="result-label">Παλμοί</div><div class="result-value" id="bin-pulses">0</div></div>
+            <div class="result-card"><div class="result-label">Μέγ. μέτρο</div><div class="result-value" id="bin-max">8</div></div>
+          </div>
+          
+          <h4 style="margin-top: var(--s-5);">Κατάσταση Φλιπ-Φλοπ</h4>
+          <div class="ff-led-row" id="bin-leds">
+            <!-- Generated by JS -->
+          </div>
+          
+          <div class="clock-controls">
+            <button class="btn btn--primary" id="bin-clock">⏱ Παλμός Ρολογιού</button>
+            <button class="btn" id="bin-auto">▶️ Auto</button>
+            <button class="btn" id="bin-reset">🔄 Reset</button>
+          </div>
+          
+          <h4 style="margin-top: var(--s-5);">Χρονικό διάγραμμα</h4>
+          <div class="timing-canvas-wrap">
+            <canvas class="timing-canvas" id="bin-canvas" width="800" height="240"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <section id="metro">
+        <div class="section-divider"><span class="badge">04</span></div>
+        <h2>Μέτρο (Modulo) Απαριθμητή</h2>
+        <p>
+          Το <strong>μέτρο (mod)</strong> είναι ο αριθμός των <strong>διαφορετικών καταστάσεων</strong>
+          που περνάει ο απαριθμητής πριν επανέλθει στην αρχική. Δεν είναι πάντα 2<sup>n</sup>.
+        </p>
+        <p>
+          Για παράδειγμα, ένας <strong>mod-5</strong> απαριθμητής με 3 FF μετράει:
+          0 → 1 → 2 → 3 → 4 → 0 → 1 → 2 → ...
+          Δεν χρησιμοποιεί τις καταστάσεις 5, 6, 7 παρότι έχει 3 FF.
+        </p>
+
+        <div class="callout callout--tip">
+          <div class="callout-title">📐 Σχέση μέτρου με Φλιπ-Φλοπ</div>
+          <p style="margin: 0;">
+            Για μέτρο <strong>N</strong>, χρειάζονται <strong>n FF</strong> όπου
+            <code>2<sup>n-1</sup> &lt; N ≤ 2<sup>n</sup></code>.
+            Δηλαδή: για mod-10 χρειάζονται 4 FF (αφού 8 &lt; 10 ≤ 16).
+          </p>
+        </div>
+      </section>
+
+      <section id="diadrastiko-modn">
+        <div class="section-divider"><span class="badge">🎮</span></div>
+        <h2>Διαδραστικό: Mod-N Counter Designer</h2>
+        
+        <div class="interactive">
+          <span class="interactive-label">Επίλεξε μέτρο</span>
+          <h3>Σχεδίασε τον δικό σου mod-N απαριθμητή</h3>
+          <p class="interactive-explainer">
+            Επίλεξε το <strong>μέτρο N</strong> από 2 μέχρι 16. Δες πόσα FF χρειάζονται,
+            ποιες καταστάσεις χρησιμοποιούνται και ποιες είναι "παράνομες".
+            Πάτα ▶️ Auto για να δεις τη σειρά.
+          </p>
+          
+          <div class="sliders">
+            <div class="slider-row">
+              <label for="mod-N">Μέτρο (mod-N)</label>
+              <input type="range" id="mod-N" min="2" max="16" step="1" value="10">
+              <output id="mod-N-val" class="mono">10</output>
+            </div>
+          </div>
+          
+          <div class="results-grid">
+            <div class="result-card"><div class="result-label">Μέτρο</div><div class="result-value" id="mod-mod">10</div></div>
+            <div class="result-card"><div class="result-label">FF χρειάζονται</div><div class="result-value" id="mod-ff">4</div></div>
+            <div class="result-card"><div class="result-label">Μέγ. μέτρο</div><div class="result-value" id="mod-max">16</div></div>
+            <div class="result-card"><div class="result-label">Αχρ. καταστάσεις</div><div class="result-value" id="mod-unused">6</div></div>
+          </div>
+          
+          <h4 style="margin-top: var(--s-5);">Πίνακας Καταστάσεων</h4>
+          <div id="mod-states-grid" class="states-grid">
+            <!-- Generated by JS -->
+          </div>
+          
+          <div class="clock-controls">
+            <button class="btn btn--primary" id="mod-step">⏱ Επόμενη</button>
+            <button class="btn" id="mod-auto">▶️ Auto</button>
+            <button class="btn" id="mod-reset">🔄 Reset</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="asyghronoi">
+        <div class="section-divider"><span class="badge">05</span></div>
+        <h2>Ασύγχρονοι vs Σύγχρονοι</h2>
+        
+        <table>
+          <thead>
+            <tr><th>Χαρακτηριστικό</th><th>Ασύγχρονος</th><th>Σύγχρονος</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Πηγή ρολογιού</td><td>Διαφορετική για κάθε FF</td><td>Ίδια για όλα τα FF</td></tr>
+            <tr><td>Καθυστέρηση</td><td>Συσσωρεύεται από FF σε FF</td><td>Καμία (όλα ταυτόχρονα)</td></tr>
+            <tr><td>Μέγιστη συχνότητα</td><td>Μικρότερη</td><td>Μεγαλύτερη</td></tr>
+            <tr><td>Πολυπλοκότητα</td><td>Μικρή</td><td>Μεγαλύτερη</td></tr>
+            <tr><td>FF</td><td>JK, T, D ή SR</td><td>Αυστηρά JK</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout callout--info">
+          <div class="callout-title">💡 Πότε ποιον;</div>
+          <p style="margin: 0;">
+            <strong>Ασύγχρονος</strong>: όταν χρειάζεσαι απλότητα και η ταχύτητα δεν είναι κρίσιμη.
+            <strong>Σύγχρονος</strong>: όταν χρειάζεσαι υψηλή συχνότητα και ακριβή χρονισμό.
+          </p>
+        </div>
+      </section>
+
+      <section id="syxnotita">
+        <div class="section-divider"><span class="badge">06</span></div>
+        <h2>Απαριθμητής ως Διαιρέτης Συχνότητας</h2>
+        <p>
+          Κάθε FF σε έναν απαριθμητή λειτουργεί ως <strong>διαιρέτης συχνότητας ÷2</strong>.
+          Άρα ένας n-bit απαριθμητής διαιρεί τη συχνότητα του ρολογιού:
+        </p>
+        
+        <div class="formula-block">
+          <div class="formula"><span class="f-label">Q₀:</span> f<sub>clk</sub> / 2</div>
+          <div class="formula"><span class="f-label">Q₁:</span> f<sub>clk</sub> / 4</div>
+          <div class="formula"><span class="f-label">Q₂:</span> f<sub>clk</sub> / 8</div>
+          <div class="formula formula--big">f<sub>MSB</sub> = f<sub>clk</sub> / N</div>
+        </div>
+        
+        <p>
+          Όπου <strong>N</strong> είναι το μέτρο του απαριθμητή. Για mod-10 BCD απαριθμητή, η συχνότητα
+          του πιο σημαντικού bit είναι f<sub>clk</sub>/10.
+        </p>
+      </section>
+
+      <section id="diadrastiko-freq">
+        <div class="section-divider"><span class="badge">🎮</span></div>
+        <h2>Διαδραστικό: Διαιρέτης Συχνότητας</h2>
+        
+        <div class="interactive">
+          <span class="interactive-label">Δες τη διαίρεση</span>
+          <h3>Από f<sub>clk</sub> σε f<sub>clk</sub>/2, /4, /8...</h3>
+          <p class="interactive-explainer">
+            Ρύθμισε τη συχνότητα του ρολογιού και τον αριθμό bits του απαριθμητή. Δες τη
+            <strong>συχνότητα κάθε bit</strong> και πώς εμφανίζεται στο χρονικό διάγραμμα.
+          </p>
+          
+          <div class="sliders">
+            <div class="slider-row">
+              <label for="div-fclk">f<sub>clk</sub> (Hz)</label>
+              <input type="range" id="div-fclk" min="100" max="100000" step="100" value="8000">
+              <output id="div-fclk-val" class="mono">8000 Hz</output>
+            </div>
+            <div class="slider-row">
+              <label for="div-bits">Αριθμός Bits</label>
+              <input type="range" id="div-bits" min="2" max="4" step="1" value="4">
+              <output id="div-bits-val" class="mono">4 bits</output>
+            </div>
+          </div>
+          
+          <div class="results-grid" id="div-results">
+            <!-- Generated by JS -->
+          </div>
+          
+          <div class="timing-canvas-wrap">
+            <canvas class="timing-canvas" id="div-canvas" width="800" height="280" style="height: 280px;"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <section id="bcd">
+        <div class="section-divider"><span class="badge">07</span></div>
+        <h2>BCD Απαριθμητής (Mod-10)</h2>
+        <p>
+          Ο <strong>BCD (Binary-Coded Decimal)</strong> απαριθμητής μετράει από 0 έως 9 (10 καταστάσεις).
+          Παρόλο που χρησιμοποιεί 4 FF (που θα μπορούσαν να φτάσουν στο 15), στον <strong>10ο παλμό</strong>
+          γίνεται αυτόματο reset μέσω σήματος <code>CLR = Q₁ · Q₃</code>.
+        </p>
+        
+        <div class="callout callout--tip">
+          <div class="callout-title">🧮 Εφαρμογή</div>
+          <p style="margin: 0;">
+            Συναντάς τους BCD απαριθμητές σε ψηφιακά ρολόγια, αριθμομηχανές, και οπουδήποτε
+            θες να εμφανίσεις δεκαδικούς αριθμούς σε 7-segment displays.
+          </p>
+        </div>
+      </section>
+
+      <section id="pdf">
+        <div class="section-divider"><span class="badge">08</span></div>
+        <h2>📄 Διαφάνειες &amp; Σημειώσεις</h2>
+        
+                <div class="pdf-embed-wrap" style="padding: var(--s-5); text-align: center;">
+          <p style="font-family: var(--f-mono); color: var(--c-muted); font-size: 0.95rem;">
+            📚 Οι διαφάνειες και χειρόγραφες σημειώσεις είναι διαθέσιμες <strong>στην τάξη</strong> από την/τον εκπαιδευτικό σου.
+          </p>
+        </div>
+      </section>
+
+      <nav style="display: flex; justify-content: space-between; margin-top: var(--s-8); padding-top: var(--s-5); border-top: 2px dashed var(--c-shadow); gap: var(--s-3); flex-wrap: wrap;">
+        <a href="logikes-oikogeneies.html" class="btn">← Λογικές Οικογένειες</a>
+        <a href="kataxoritres.html" class="btn btn--primary">Επόμενο: Καταχωρητές →</a>
+      </nav>
+      
+    </main>
+  </div>
+
+    <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        
+        <div class="footer-col">
+          <div class="footer-mark">Ψ Psifiaka Lab</div>
+          <p>Δωρεάν εκπαιδευτικό υλικό για Ψηφιακά Ηλεκτρονικά ΙΙ Γ' Λυκείου.</p>
+          <p style="margin-top:0.5rem; font-size:0.85rem; opacity:0.85;">Παγκύπριες Εξετάσεις • Τεχνική Σχολή</p>
+        </div>
+        
+        <div class="footer-col">
+          <h4 class="footer-title">Φροντιστήριο</h4>
+          <p style="font-size:0.92rem;">Ιδιαίτερα μαθήματα Πληροφορικής &amp; Ψηφιακών Ηλεκτρονικών για Παγκύπριες Εξετάσεις (Α΄ Β΄ Γ΄ Λυκείου).</p>
+          <a href="https://www.antreassotiriou.com/" target="_blank" rel="noopener" class="footer-link footer-link--cta">
+            🌐 antreassotiriou.com
+          </a>
+        </div>
+        
+        <div class="footer-col">
+          <h4 class="footer-title">Social Media</h4>
+          <ul class="footer-social">
+            <li>
+              <a href="https://www.facebook.com/profile.php?id=61583083336971" target="_blank" rel="noopener" aria-label="Facebook">
+                <span class="social-icon">📘</span> Facebook
+              </a>
+            </li>
+            <li>
+              <a href="https://www.instagram.com/pagkypriesonline/" target="_blank" rel="noopener" aria-label="Instagram">
+                <span class="social-icon">📸</span> Instagram
+              </a>
+            </li>
+            <li>
+              <a href="https://www.tiktok.com/@pagkypriesonline" target="_blank" rel="noopener" aria-label="TikTok">
+                <span class="social-icon">🎵</span> TikTok
+              </a>
+            </li>
+            <li>
+              <a href="https://share.google/84mqAqnpcEjChqpGW" target="_blank" rel="noopener" aria-label="Google Business">
+                <span class="social-icon">📍</span> Google Business
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+      </div>
+      
+      <div class="footer-bottom">
+        <p class="muted" style="font-size: 0.85rem;">© 2026 Psifiaka Lab • Powered by <a href="https://www.antreassotiriou.com/" target="_blank" rel="noopener" style="color:var(--c-primary); text-decoration:none; font-weight:600;">Antreas Sotiriou eLearning</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/script.js"></script>
+  <script src="assets/counters.js"></script>
+</body>
+</html>

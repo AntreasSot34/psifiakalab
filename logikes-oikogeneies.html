@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Λογικές Οικογένειες (TTL, CMOS) — Σύγκριση &amp; Διαδραστικά | Psifiaka Lab</title>
+  <meta name="description" content="Πλήρης οδηγός για TTL και CMOS λογικές οικογένειες. Διαδραστική σύγκριση χαρακτηριστικών (κατανάλωση, ταχύτητα, fan-out, περιθώριο θορύβου), προσομοιώσεις λογικών επιπέδων. Ψηφιακά Ηλεκτρονικά ΙΙ.">
+  <meta name="keywords" content="λογικές οικογένειες, TTL, CMOS, fan-out, περιθώριο θορύβου, καθυστέρηση διάδοσης, V_OH, V_IL, σύγκριση λογικών οικογενειών, Παγκύπριες Εξετάσεις, Γ Λυκείου, Β Λυκείου, τεχνική σχολή, Κύπρος, ιδιαίτερα μαθήματα, Πληροφορική, Antreas Sotiriou eLearning">
+  <link rel="canonical" href="https://psifiakalab.com/logikes-oikogeneies.html">
+  
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="el_GR">
+  <meta property="og:title" content="Λογικές Οικογένειες — TTL vs CMOS">
+  <meta property="og:description" content="Διαδραστική σύγκριση λογικών οικογενειών με προσομοιώσεις.">
+  <meta property="og:url" content="https://psifiakalab.com/logikes-oikogeneies.html">
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LearningResource",
+    "name": "Λογικές Οικογένειες (TTL, CMOS)",
+    "description": "Θεωρία και διαδραστικές προσομοιώσεις για τις λογικές οικογένειες TTL και CMOS",
+    "educationalLevel": "Γ' Λυκείου",
+    "inLanguage": "el",
+    "learningResourceType": "Interactive lesson",
+    "isPartOf": { "@type": "Course", "name": "Ψηφιακά Ηλεκτρονικά ΙΙ" }
+  }
+  </script>
+  
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23ff5c39'/%3E%3Ctext x='50' y='68' font-family='monospace' font-size='55' font-weight='700' text-anchor='middle' fill='%231a1d2e'%3EΨ%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="assets/chapter-extras.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav-bar" aria-label="Κύρια πλοήγηση">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">Ψ</span>
+        <span>Psifiaka Lab</span>
+      </a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav">Μενού ☰</button>
+      <ul class="nav-list" id="primary-nav">
+        <li><a href="index.html">Αρχική</a></li>
+        <li><a href="flip-flop.html">1. Φλιπ-Φλοπ</a></li>
+        <li><a href="kyklomata-palmon.html">2. Πολυδονητές</a></li>
+        <li><a href="logikes-oikogeneies.html">3. Λογικές Οικογένειες</a></li>
+        <li><a href="apariomites.html">4. Απαριθμητές</a></li>
+        <li><a href="kataxoritres.html">5. Καταχωρητές</a></li>
+        <li><a href="kodikopoiites.html">6. Κωδικοποιητές</a></li>
+        <li><a href="sygkrites.html">7. Συγκριτές</a></li>
+        <li><a href="psifio-isotimias.html">8. Ψηφίο Ισοτιμίας</a></li>
+        <li><a href="polyplektes.html">9. Πολυπλέκτες</a></li>
+        <li><a href="metatropes-da-ad.html">10. Μετατροπείς D/A &amp; A/D</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="chapter-layout">
+    
+    <aside class="chapter-sidebar">
+      <h4>Σε αυτό το κεφάλαιο</h4>
+      <ul>
+        <li><a href="#eisagogi">Εισαγωγή</a></li>
+        <li><a href="#oikogeneies">Οι κύριες οικογένειες</a></li>
+        <li><a href="#xaraktiristika">8 Χαρακτηριστικά</a></li>
+        <li><a href="#logika-epipeda">Λογικά Επίπεδα</a></li>
+        <li><a href="#diadrastiko-levels">🎮 Logic Level Tester</a></li>
+        <li><a href="#fan-out">Fan-Out</a></li>
+        <li><a href="#diadrastiko-fanout">🎮 Fan-Out Simulator</a></li>
+        <li><a href="#sygkrisi">TTL vs CMOS</a></li>
+        <li><a href="#diadrastiko-compare">🎮 Διαδραστική Σύγκριση</a></li>
+        <li><a href="#paradeigmata">Παραδείγματα</a></li>
+        <li><a href="#pdf">📄 Διαφάνειες</a></li>
+      </ul>
+    </aside>
+
+    <main class="chapter-content">
+      
+      <header class="chapter-hero">
+        <span class="chapter-num">Κεφάλαιο 03</span>
+        <h1>Λογικές Οικογένειες</h1>
+        <p class="lede">
+          Όλες οι ψηφιακές πύλες δεν είναι ίδιες. Ανάλογα με την <strong>τεχνολογία κατασκευής</strong>
+          έχουν διαφορετική κατανάλωση, ταχύτητα, αντοχή σε θόρυβο και τάσεις λειτουργίας.
+          Ας δούμε τις δύο πιο σημαντικές: <strong>TTL</strong> και <strong>CMOS</strong>.
+        </p>
+      </header>
+
+      <!-- ===== ΕΙΣΑΓΩΓΗ ===== -->
+      <section id="eisagogi">
+        <div class="section-divider"><span class="badge">01</span></div>
+        <h2>Τι είναι μια λογική οικογένεια;</h2>
+        <p>
+          Μια <strong>λογική οικογένεια</strong> είναι μια κατηγορία ψηφιακών κυκλωμάτων
+          που βασίζονται σε <strong>κοινή τεχνολογία κατασκευής</strong> και έχουν παρόμοια
+          ηλεκτρικά χαρακτηριστικά. Καθορίζει τον τρόπο που υλοποιούνται οι λογικές πύλες
+          με συγκεκριμένα τρανζίστορ και διατάξεις.
+        </p>
+        
+        <div class="callout callout--info">
+          <div class="callout-title">💡 Γιατί έχει σημασία;</div>
+          <p style="margin: 0;">
+            Όταν σχεδιάζεις ένα κύκλωμα, η επιλογή λογικής οικογένειας καθορίζει:
+            <strong>πόσο γρήγορο</strong> θα είναι, <strong>πόση ενέργεια</strong> θα καταναλώνει,
+            <strong>πόσο ευαίσθητο</strong> θα είναι σε θόρυβο, και <strong>τι τάσεις</strong> θα μπορεί να δεχτεί.
+          </p>
+        </div>
+      </section>
+
+      <!-- ===== ΟΙΚΟΓΕΝΕΙΕΣ ===== -->
+      <section id="oikogeneies">
+        <div class="section-divider"><span class="badge">02</span></div>
+        <h2>Οι Κύριες Λογικές Οικογένειες</h2>
+        <p>Υπάρχουν πολλές οικογένειες, αλλά οι 2 πιο διαδεδομένες είναι:</p>
+        
+        <div class="cat-grid">
+          <div class="cat-card" style="border-color: var(--c-secondary);">
+            <div class="cat-icon" style="background:#d6e4ff;">⚡</div>
+            <h3>TTL <small style="font-weight:500; color:var(--c-muted)">(Transistor-Transistor Logic)</small></h3>
+            <p>Διπολικά τρανζίστορ <strong>BJT</strong>.</p>
+            <p>Γρήγορη, αλλά καταναλώνει αρκετή ισχύ.</p>
+            <p>Τυπική σειρά: <code>74xx</code>, <code>74LSxx</code>.</p>
+          </div>
+          <div class="cat-card" style="border-color: var(--c-tertiary);">
+            <div class="cat-icon" style="background:#d6ffe4;">🔋</div>
+            <h3>CMOS <small style="font-weight:500; color:var(--c-muted)">(Complementary MOS)</small></h3>
+            <p>Τρανζίστορ <strong>MOSFET</strong>.</p>
+            <p>Πολύ χαμηλή κατανάλωση, μεγάλο fan-out.</p>
+            <p>Τυπική σειρά: <code>74HCxx</code>, <code>74HCTxx</code>.</p>
+          </div>
+        </div>
+        
+        <p>
+          Άλλες λογικές οικογένειες που πρέπει να γνωρίζεις: <strong>PMOS</strong>, <strong>NMOS</strong>,
+          <strong>RTL</strong>, <strong>DTL</strong>, <strong>ECL</strong> (πολύ γρήγορη), <strong>I²L</strong>.
+        </p>
+      </section>
+
+      <!-- ===== 8 ΧΑΡΑΚΤΗΡΙΣΤΙΚΑ ===== -->
+      <section id="xaraktiristika">
+        <div class="section-divider"><span class="badge">03</span></div>
+        <h2>Τα 8 Χαρακτηριστικά κάθε Οικογένειας</h2>
+        
+        <ol style="font-size: 1rem;">
+          <li><strong>Καταναλισκόμενη Ισχύς (P)</strong> — P = V·I. Όσο μικρότερη, τόσο καλύτερα για μπαταρίες.</li>
+          <li><strong>Λογικά Επίπεδα Τάσης</strong> — Ποιες τάσεις θεωρούνται 0 και ποιες 1.</li>
+          <li><strong>Λογικά Επίπεδα Εισόδου/Εξόδου</strong> — V_IH, V_IL, V_OH, V_OL.</li>
+          <li><strong>Περιθώριο Θορύβου (Noise Margin)</strong> — Πόσο θόρυβο αντέχει χωρίς να αλλάξει η λογική κατάσταση.</li>
+          <li><strong>Καθυστέρηση Διάδοσης (t_pd)</strong> — Πόσος χρόνος χρειάζεται μια αλλαγή στην είσοδο για να φτάσει στην έξοδο.</li>
+          <li><strong>Ικανότητα Οδήγησης (Fan-Out)</strong> — Πόσες άλλες πύλες μπορεί να οδηγήσει μια έξοδος.</li>
+          <li><strong>Τάση Τροφοδοσίας (V_CC)</strong> — Η τάση που χρειάζεται για να λειτουργήσει.</li>
+          <li><strong>Γινόμενο Ταχύτητας-Ισχύος (Speed-Power Product)</strong> — Συνολικός δείκτης απόδοσης.</li>
+        </ol>
+      </section>
+
+      <!-- ===== ΛΟΓΙΚΑ ΕΠΙΠΕΔΑ ===== -->
+      <section id="logika-epipeda">
+        <div class="section-divider"><span class="badge">04</span></div>
+        <h2>Λογικά Επίπεδα Εισόδου &amp; Εξόδου</h2>
+        <p>
+          Σε ένα ψηφιακό κύκλωμα, μια τάση δεν είναι ποτέ ακριβώς 0V ή 5V. Έχουμε
+          <strong>περιοχές τάσης</strong> που θεωρούνται 0 ή 1.
+          Για κάθε λογική οικογένεια ορίζονται 4 βασικές τάσεις:
+        </p>
+        
+        <div class="formula-block">
+          <div class="formula"><span class="f-label">V_OH(min):</span> Ελάχιστη τάση εξόδου για λογικό 1</div>
+          <div class="formula"><span class="f-label">V_OL(max):</span> Μέγιστη τάση εξόδου για λογικό 0</div>
+          <div class="formula"><span class="f-label">V_IH(min):</span> Ελάχιστη τάση εισόδου που ερμηνεύεται ως 1</div>
+          <div class="formula"><span class="f-label">V_IL(max):</span> Μέγιστη τάση εισόδου που ερμηνεύεται ως 0</div>
+        </div>
+        
+        <h3>TTL Παράδειγμα (στα 5V):</h3>
+        <table>
+          <thead><tr><th>Τάση</th><th>Έξοδος</th><th>Είσοδος</th></tr></thead>
+          <tbody>
+            <tr><td>Λογικό 1</td><td>2,4V – 5V</td><td>2V – 5V</td></tr>
+            <tr><td>Λογικό 0</td><td>0V – 0,4V</td><td>0V – 0,8V</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ===== ΔΙΑΔΡΑΣΤΙΚΟ LEVELS ===== -->
+      <section id="diadrastiko-levels">
+        <div class="section-divider"><span class="badge">🎮</span></div>
+        <h2>Διαδραστικό: Logic Level Tester</h2>
+        
+        <div class="interactive">
+          <span class="interactive-label">Δοκίμασε τάσεις!</span>
+          <h3>Τι θα ερμηνεύσει η πύλη;</h3>
+          <p class="interactive-explainer">
+            Επίλεξε <strong>λογική οικογένεια</strong> και τάση τροφοδοσίας <strong>V_CC</strong>.
+            Μετακίνησε τον slider της τάσης εισόδου για να δεις πώς ερμηνεύεται από την πύλη:
+            <strong>0</strong>, <strong>1</strong>, ή <strong>απροσδιόριστη</strong>!
+          </p>
+          
+          <div class="sliders">
+            <div class="slider-row">
+              <label for="lvl-family">Λογική οικογένεια</label>
+              <select id="lvl-family" class="select-input" style="grid-column: 2 / span 2;">
+                <option value="ttl">TTL (74xx)</option>
+                <option value="cmos5">CMOS @ 5V (74HC)</option>
+                <option value="cmos3">CMOS @ 3.3V (74LV)</option>
+                <option value="lvcmos">LVCMOS @ 1.8V</option>
+              </select>
+            </div>
+            <div class="slider-row">
+              <label for="lvl-V">Τάση δοκιμής</label>
+              <input type="range" id="lvl-V" min="0" max="5" step="0.05" value="2.5">
+              <output id="lvl-V-val" class="mono">2.50 V</output>
+            </div>
+          </div>
+          
+          <div class="results-grid">
+            <div class="result-card">
+              <div class="result-label">V_IL(max)</div>
+              <div class="result-value mono" id="lvl-VIL" style="font-size:1.1rem;">—</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">V_IH(min)</div>
+              <div class="result-value mono" id="lvl-VIH" style="font-size:1.1rem;">—</div>
+            </div>
+            <div class="result-card" style="background: var(--c-bg-soft);">
+              <div class="result-label">Ερμηνεία</div>
+              <div class="result-value" id="lvl-result">—</div>
+            </div>
+          </div>
+          
+          <div class="timing-canvas-wrap" style="margin-top: var(--s-4);">
+            <canvas class="timing-canvas" id="lvl-canvas" width="800" height="220" style="height: 220px;"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== FAN-OUT ===== -->
+      <section id="fan-out">
+        <div class="section-divider"><span class="badge">05</span></div>
+        <h2>Ικανότητα Οδήγησης (Fan-Out)</h2>
+        <p>
+          Το <strong>Fan-Out</strong> είναι ο <strong>μέγιστος αριθμός εισόδων</strong> που μπορεί να
+          οδηγήσει η έξοδος μιας πύλης χωρίς να επηρεαστεί η κανονική της λειτουργία.
+        </p>
+        
+        <div class="cat-grid">
+          <div class="cat-card">
+            <div class="cat-icon" style="background:#d6e4ff;">⚡</div>
+            <h3>TTL</h3>
+            <p>Fan-Out ≈ <strong>10</strong> πύλες</p>
+          </div>
+          <div class="cat-card">
+            <div class="cat-icon" style="background:#d6ffe4;">🔋</div>
+            <h3>CMOS</h3>
+            <p>Fan-Out ≈ <strong>50</strong> πύλες</p>
+          </div>
+        </div>
+        
+        <h3>Τι συμβαίνει αν παραβιάσεις το όριο fan-out;</h3>
+        <ul>
+          <li>Μη σωστή λειτουργία της πύλης (το σήμα "πέφτει")</li>
+          <li>Αύξηση του χρόνου μετάβασης (transition time)</li>
+          <li>Αύξηση κατανάλωσης ενέργειας</li>
+          <li>Θερμικές βλάβες</li>
+          <li>Παρεμβολές σε γειτονικές πύλες</li>
+        </ul>
+      </section>
+
+      <!-- ===== ΔΙΑΔΡΑΣΤΙΚΟ FAN-OUT ===== -->
+      <section id="diadrastiko-fanout">
+        <div class="section-divider"><span class="badge">🎮</span></div>
+        <h2>Διαδραστικό: Fan-Out Simulator</h2>
+        
+        <div class="interactive">
+          <span class="interactive-label">Πόσες πύλες αντέχει;</span>
+          <h3>Δοκίμασε τα όρια</h3>
+          <p class="interactive-explainer">
+            Επίλεξε λογική οικογένεια και αύξησε τον αριθμό των πυλών που οδηγείς.
+            Όταν ξεπεράσεις το όριο, η έξοδος θα αρχίσει να "πέφτει" και τελικά να αποτυγχάνει.
+          </p>
+          
+          <div class="sliders">
+            <div class="slider-row">
+              <label for="fo-family">Οικογένεια</label>
+              <select id="fo-family" class="select-input" style="grid-column: 2 / span 2;">
+                <option value="ttl">TTL (Fan-Out = 10)</option>
+                <option value="cmos">CMOS (Fan-Out = 50)</option>
+              </select>
+            </div>
+            <div class="slider-row">
+              <label for="fo-N">Αριθμός πυλών</label>
+              <input type="range" id="fo-N" min="1" max="60" step="1" value="5">
+              <output id="fo-N-val" class="mono">5</output>
+            </div>
+          </div>
+          
+          <div class="results-grid">
+            <div class="result-card">
+              <div class="result-label">Όριο Fan-Out</div>
+              <div class="result-value" id="fo-limit">10</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Αριθμός φόρτου</div>
+              <div class="result-value" id="fo-load">5</div>
+            </div>
+            <div class="result-card" style="background: var(--c-bg-soft);">
+              <div class="result-label">Κατάσταση</div>
+              <div class="result-value" id="fo-status">✅ OK</div>
+            </div>
+          </div>
+          
+          <div class="timing-canvas-wrap">
+            <canvas class="timing-canvas" id="fo-canvas" width="800" height="280" style="height: 280px;"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== ΣΥΓΚΡΙΣΗ ===== -->
+      <section id="sygkrisi">
+        <div class="section-divider"><span class="badge">06</span></div>
+        <h2>TTL vs CMOS — Σύγκριση</h2>
+        
+        <table>
+          <thead>
+            <tr><th>Χαρακτηριστικό</th><th>TTL</th><th>CMOS</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Τάση Τροφοδοσίας</td><td>5 V</td><td>3-15 V (τυπικά 3-5,5)</td></tr>
+            <tr><td>Τεχνολογία</td><td>BJT</td><td>MOSFET</td></tr>
+            <tr><td>Κατανάλωση</td><td>Υψηλή</td><td>Πολύ Χαμηλή</td></tr>
+            <tr><td>Καθυστέρηση</td><td>10 ns</td><td>60-100 ns</td></tr>
+            <tr><td>Ευαισθησία θορύβου</td><td>Μικρότερη</td><td>Μεγαλύτερη</td></tr>
+            <tr><td>Θερμοκρασία</td><td>0°C – 70°C</td><td>-40°C – 85°C</td></tr>
+            <tr><td>Ικανότητα Οδήγησης</td><td>Χαμηλή (~10)</td><td>Ψηλή (~50)</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout callout--warning">
+          <div class="callout-title">⚠️ Προσοχή με τα CMOS</div>
+          <p style="margin: 0;">
+            Τα CMOS είναι <strong>ευαίσθητα στον στατικό ηλεκτρισμό</strong>. Πρέπει να τα
+            χειρίζεσαι με αντιστατικά μέτρα (βραχιόλι γείωσης, αντιστατικός χώρος εργασίας).
+          </p>
+        </div>
+      </section>
+
+      <!-- ===== ΔΙΑΔΡΑΣΤΙΚΟ ΣΥΓΚΡΙΣΗΣ ===== -->
+      <section id="diadrastiko-compare">
+        <div class="section-divider"><span class="badge">🎮</span></div>
+        <h2>Διαδραστικό: Visual Σύγκριση</h2>
+        
+        <div class="interactive">
+          <span class="interactive-label">Bar charts</span>
+          <h3>Δες τις διαφορές οπτικά</h3>
+          <p class="interactive-explainer">
+            Παρακάτω βλέπεις 4 βασικά χαρακτηριστικά συγκριτικά. Πάτα κουμπί για να δεις
+            ποια οικογένεια <strong>κερδίζει</strong> σε κάθε τομέα.
+          </p>
+          
+          <div class="clock-controls" style="justify-content: flex-start;">
+            <button class="btn btn--primary" id="cmp-power">🔋 Κατανάλωση</button>
+            <button class="btn" id="cmp-speed">⚡ Ταχύτητα</button>
+            <button class="btn" id="cmp-fanout">📡 Fan-Out</button>
+            <button class="btn" id="cmp-noise">🛡️ Αντοχή Θορύβου</button>
+          </div>
+          
+          <div id="cmp-message" style="text-align:center; padding: var(--s-4); margin-top: var(--s-3); background: var(--c-bg-soft); border-radius: var(--r-md); border: 2px dashed var(--c-ink); font-family: var(--f-display); font-weight: 700; font-size: 1.05rem;">
+            Πάτα ένα κουμπί παραπάνω
+          </div>
+          
+          <div id="cmp-bars" style="margin-top: var(--s-4); display: flex; flex-direction: column; gap: var(--s-3);">
+            <!-- Bars rendered by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== ΠΑΡΑΔΕΙΓΜΑΤΑ ===== -->
+      <section id="paradeigmata">
+        <div class="section-divider"><span class="badge">07</span></div>
+        <h2>Παραδείγματα Σειρών</h2>
+        <table>
+          <thead>
+            <tr><th>Σειρά</th><th>V_CC</th><th>Οικογένεια</th><th>Κατανάλωση</th><th>Ταχύτητα</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>74xx</td><td>4,75–5,25 V</td><td>TTL</td><td>Υψηλή</td><td>10 ns</td></tr>
+            <tr><td>74LSxx</td><td>4,75–5,25 V</td><td>TTL (Low Power Schottky)</td><td>Χαμηλή</td><td>9 ns</td></tr>
+            <tr><td>74HCxx</td><td>2–6 V</td><td>CMOS</td><td>Χαμηλή</td><td>8 ns</td></tr>
+            <tr><td>74HCTxx</td><td>4,5–5,5 V</td><td>CMOS (TTL-compatible)</td><td>Χαμηλή</td><td>8 ns</td></tr>
+            <tr><td>74LVxx</td><td>2–5,5 V</td><td>CMOS Low Voltage</td><td>Πολύ Χαμηλή</td><td>10-15 ns</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ===== PDF ===== -->
+      <section id="pdf">
+        <div class="section-divider"><span class="badge">08</span></div>
+        <h2>📄 Διαφάνειες &amp; Σημειώσεις</h2>
+        
+                <div class="pdf-embed-wrap" style="padding: var(--s-5); text-align: center;">
+          <p style="font-family: var(--f-mono); color: var(--c-muted); font-size: 0.95rem;">
+            📚 Οι διαφάνειες και χειρόγραφες σημειώσεις είναι διαθέσιμες <strong>στην τάξη</strong> από την/τον εκπαιδευτικό σου.
+          </p>
+        </div>
+      </section>
+
+      <nav style="display: flex; justify-content: space-between; margin-top: var(--s-8); padding-top: var(--s-5); border-top: 2px dashed var(--c-shadow); gap: var(--s-3); flex-wrap: wrap;">
+        <a href="kyklomata-palmon.html" class="btn">← Πολυδονητές</a>
+        <a href="apariomites.html" class="btn btn--primary">Επόμενο: Απαριθμητές →</a>
+      </nav>
+      
+    </main>
+  </div>
+
+    <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        
+        <div class="footer-col">
+          <div class="footer-mark">Ψ Psifiaka Lab</div>
+          <p>Δωρεάν εκπαιδευτικό υλικό για Ψηφιακά Ηλεκτρονικά ΙΙ Γ' Λυκείου.</p>
+          <p style="margin-top:0.5rem; font-size:0.85rem; opacity:0.85;">Παγκύπριες Εξετάσεις • Τεχνική Σχολή</p>
+        </div>
+        
+        <div class="footer-col">
+          <h4 class="footer-title">Φροντιστήριο</h4>
+          <p style="font-size:0.92rem;">Ιδιαίτερα μαθήματα Πληροφορικής &amp; Ψηφιακών Ηλεκτρονικών για Παγκύπριες Εξετάσεις (Α΄ Β΄ Γ΄ Λυκείου).</p>
+          <a href="https://www.antreassotiriou.com/" target="_blank" rel="noopener" class="footer-link footer-link--cta">
+            🌐 antreassotiriou.com
+          </a>
+        </div>
+        
+        <div class="footer-col">
+          <h4 class="footer-title">Social Media</h4>
+          <ul class="footer-social">
+            <li>
+              <a href="https://www.facebook.com/profile.php?id=61583083336971" target="_blank" rel="noopener" aria-label="Facebook">
+                <span class="social-icon">📘</span> Facebook
+              </a>
+            </li>
+            <li>
+              <a href="https://www.instagram.com/pagkypriesonline/" target="_blank" rel="noopener" aria-label="Instagram">
+                <span class="social-icon">📸</span> Instagram
+              </a>
+            </li>
+            <li>
+              <a href="https://www.tiktok.com/@pagkypriesonline" target="_blank" rel="noopener" aria-label="TikTok">
+                <span class="social-icon">🎵</span> TikTok
+              </a>
+            </li>
+            <li>
+              <a href="https://share.google/84mqAqnpcEjChqpGW" target="_blank" rel="noopener" aria-label="Google Business">
+                <span class="social-icon">📍</span> Google Business
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+      </div>
+      
+      <div class="footer-bottom">
+        <p class="muted" style="font-size: 0.85rem;">© 2026 Psifiaka Lab • Powered by <a href="https://www.antreassotiriou.com/" target="_blank" rel="noopener" style="color:var(--c-primary); text-decoration:none; font-weight:600;">Antreas Sotiriou eLearning</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/script.js"></script>
+  <script src="assets/logic-families.js"></script>
+</body>
+</html>

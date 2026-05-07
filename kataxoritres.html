@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Καταχωρητές (Shift Registers) — SISO, SIPO, PISO, PIPO | Psifiaka Lab</title>
+  <meta name="description" content="Πλήρης θεωρία για ψηφιακούς καταχωρητές και ολισθητές. Διαδραστικές προσομοιώσεις SISO/SIPO/PISO/PIPO, Ring Counter, Johnson Counter. Ψηφιακά Ηλεκτρονικά ΙΙ Γ' Λυκείου.">
+  <meta name="keywords" content="καταχωρητές, shift register, SISO, SIPO, PISO, PIPO, ολισθητής, Ring Counter, Johnson Counter, κυκλικός απαριθμητής, Παγκύπριες Εξετάσεις, Γ Λυκείου, Β Λυκείου, τεχνική σχολή, Κύπρος, ιδιαίτερα μαθήματα, Πληροφορική, Antreas Sotiriou eLearning">
+  <link rel="canonical" href="https://psifiakalab.com/kataxoritres.html">
+  
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="el_GR">
+  <meta property="og:title" content="Καταχωρητές — Shift Registers">
+  <meta property="og:description" content="Διαδραστικές προσομοιώσεις για SISO, SIPO, PISO, PIPO, Ring & Johnson counters.">
+  <meta property="og:url" content="https://psifiakalab.com/kataxoritres.html">
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LearningResource",
+    "name": "Καταχωρητές (Shift Registers)",
+    "description": "Θεωρία και διαδραστικές ασκήσεις για καταχωρητές και ολισθητές",
+    "educationalLevel": "Γ' Λυκείου",
+    "inLanguage": "el",
+    "learningResourceType": "Interactive lesson",
+    "isPartOf": { "@type": "Course", "name": "Ψηφιακά Ηλεκτρονικά ΙΙ" }
+  }
+  </script>
+  
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23ff5c39'/%3E%3Ctext x='50' y='68' font-family='monospace' font-size='55' font-weight='700' text-anchor='middle' fill='%231a1d2e'%3EΨ%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="assets/chapter-extras.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav-bar" aria-label="Κύρια πλοήγηση">
+      <a href="index.html" class="logo"><span class="logo-mark">Ψ</span><span>Psifiaka Lab</span></a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav">Μενού ☰</button>
+      <ul class="nav-list" id="primary-nav">
+        <li><a href="index.html">Αρχική</a></li>
+        <li><a href="flip-flop.html">1. Φλιπ-Φλοπ</a></li>
+        <li><a href="kyklomata-palmon.html">2. Πολυδονητές</a></li>
+        <li><a href="logikes-oikogeneies.html">3. Λογικές Οικογένειες</a></li>
+        <li><a href="apariomites.html">4. Απαριθμητές</a></li>
+        <li><a href="kataxoritres.html">5. Καταχωρητές</a></li>
+        <li><a href="kodikopoiites.html">6. Κωδικοποιητές</a></li>
+        <li><a href="sygkrites.html">7. Συγκριτές</a></li>
+        <li><a href="psifio-isotimias.html">8. Ψηφίο Ισοτιμίας</a></li>
+        <li><a href="polyplektes.html">9. Πολυπλέκτες</a></li>
+        <li><a href="metatropes-da-ad.html">10. Μετατροπείς D/A &amp; A/D</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="chapter-layout">
+    
+    <aside class="chapter-sidebar">
+      <h4>Σε αυτό το κεφάλαιο</h4>
+      <ul>
+        <li><a href="#eisagogi">Εισαγωγή</a></li>
+        <li><a href="#typoi">Οι 4 βασικοί τύποι</a></li>
+        <li><a href="#diadrastiko-shift">🎮 Shift Register Visualizer</a></li>
+        <li><a href="#ring">Κυκλικός Απαριθμητής</a></li>
+        <li><a href="#johnson">Απαριθμητής Johnson</a></li>
+        <li><a href="#diadrastiko-ring">🎮 Ring vs Johnson</a></li>
+        <li><a href="#multiply">Πολλαπλασιασμός με Ολίσθηση</a></li>
+        <li><a href="#diadrastiko-mult">🎮 Shift = ×2 ή ÷2</a></li>
+        <li><a href="#efarmoges">Εφαρμογές</a></li>
+        <li><a href="#pdf">📄 Διαφάνειες</a></li>
+      </ul>
+    </aside>
+
+    <main class="chapter-content">
+      
+      <header class="chapter-hero">
+        <span class="chapter-num">Κεφάλαιο 05</span>
+        <h1>Καταχωρητές (Shift Registers)</h1>
+        <p class="lede">
+          Οι <strong>καταχωρητές</strong> είναι ομάδες Φλιπ-Φλοπ που <strong>αποθηκεύουν και
+          μεταφέρουν δεδομένα</strong>. Όταν έχουν δυνατότητα ολίσθησης ονομάζονται
+          <strong>ολισθητές (shift registers)</strong> — αποτελούν τον σκελετό κάθε
+          σύγχρονου επεξεργαστή.
+        </p>
+      </header>
+
+      <section id="eisagogi">
+        <div class="section-divider"><span class="badge">01</span></div>
+        <h2>Τι είναι ο καταχωρητής;</h2>
+        <p>
+          Ο καταχωρητής είναι ένα ακολουθιακό λογικό κύκλωμα κατασκευασμένο από
+          <strong>N Φλιπ-Φλοπ σε σειρά</strong>, που μπορεί να αποθηκεύσει N bits.
+          Οι καταχωρητές με δυνατότητα ολίσθησης ονομάζονται <strong>ολισθητές</strong>,
+          ενώ αυτοί χωρίς ολίσθηση λέγονται <strong>στατικοί καταχωρητές</strong>.
+        </p>
+
+        <div class="callout callout--info">
+          <div class="callout-title">💡 Πού τους συναντάμε;</div>
+          <p style="margin: 0;">
+            Σε CPUs (αποθηκεύουν τα ενδιάμεσα αποτελέσματα), σε διαύλους επικοινωνίας
+            (μετατροπή σειριακό↔παράλληλο), σε καθυστερητές σήματος, και ως οδηγοί
+            για 7-segment displays.
+          </p>
+        </div>
+      </section>
+
+      <section id="typoi">
+        <div class="section-divider"><span class="badge">02</span></div>
+        <h2>Οι 4 Βασικοί Τύποι Καταχωρητών</h2>
+        <p>
+          Ταξινομούνται με βάση το πώς <strong>μπαίνουν</strong> και <strong>βγαίνουν</strong>
+          τα δεδομένα: σε σειρά (serial) ή παράλληλα (parallel).
+        </p>
+        
+        <div class="cat-grid">
+          <div class="cat-card">
+            <div class="cat-icon" style="background:#d6e4ff;">→→</div>
+            <h3>SISO</h3>
+            <p style="font-size: 0.85rem;"><strong>Serial In - Serial Out</strong></p>
+            <p>Bits μπαίνουν ένα-ένα και βγαίνουν ένα-ένα. Λειτουργεί ως καθυστερητής σήματος.</p>
+          </div>
+          <div class="cat-card">
+            <div class="cat-icon" style="background:#d6ffe4;">→⫶</div>
+            <h3>SIPO</h3>
+            <p style="font-size: 0.85rem;"><strong>Serial In - Parallel Out</strong></p>
+            <p>Bits μπαίνουν σειριακά, διαβάζονται όλα μαζί. Σειριακό → Παράλληλο.</p>
+          </div>
+          <div class="cat-card">
+            <div class="cat-icon" style="background:#ffd6e4;">⫶→</div>
+            <h3>PISO</h3>
+            <p style="font-size: 0.85rem;"><strong>Parallel In - Serial Out</strong></p>
+            <p>Bits φορτώνονται μαζί, βγαίνουν ένα-ένα. Παράλληλο → Σειριακό.</p>
+          </div>
+          <div class="cat-card">
+            <div class="cat-icon" style="background:#fff4d6;">⫶⫶</div>
+            <h3>PIPO</h3>
+            <p style="font-size: 0.85rem;"><strong>Parallel In - Parallel Out</strong></p>
+            <p>Όλα μαζί μέσα, όλα μαζί έξω. Στατικός καταχωρητής (αποθήκευση).</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="diadrastiko-shift">
+        <div class="section-divider"><span class="badge">🎮</span></div>
+        <h2>Διαδραστικό: Shift Register Visualizer</h2>
+        
+        <div class="interactive">
+          <span class="interactive-label">Ολίσθηση bits!</span>
+          <h3>Δες πώς λειτουργούν οι 4 τύποι</h3>
+          <p class="interactive-explainer">
+            Επίλεξε τύπο καταχωρητή. Για <strong>SISO/SIPO</strong>, πάτα την σειριακή είσοδο
+            (Data In = 0/1) και μετά παλμό ρολογιού. Για <strong>PISO/PIPO</strong>, πάτα τα bits
+            παράλληλα και μετά LOAD ή CLOCK.
+          </p>
+          
+          <div class="sliders">
+            <div class="slider-row">
+              <label for="sr-type">Τύπος</label>
+              <select id="sr-type" class="select-input" style="grid-column: 2 / span 2;">
+                <option value="siso">SISO — Serial In, Serial Out</option>
+                <option value="sipo">SIPO — Serial In, Parallel Out</option>
+                <option value="piso">PISO — Parallel In, Serial Out</option>
+                <option value="pipo">PIPO — Parallel In, Parallel Out</option>
+              </select>
+            </div>
+          </div>
+          
+          <!-- Serial input controls (for SISO, SIPO) -->
+          <div id="sr-serial-input" style="display:flex;gap:var(--s-3);align-items:center;justify-content:center;padding:var(--s-3);">
+            <span class="mono" style="font-weight:700;">Data In:</span>
+            <button class="bit-btn" id="sr-din" data-bit="0">0</button>
+          </div>
+          
+          <!-- Parallel input controls (for PISO, PIPO) -->
+          <div id="sr-parallel-input" style="display:none;flex-direction:column;gap:var(--s-2);padding:var(--s-3);background:var(--c-bg-soft);border:2px dashed var(--c-ink);border-radius:var(--r-md);margin:var(--s-3) 0;">
+            <div class="mono" style="font-weight:700;text-align:center;">Παράλληλη είσοδος (D₀ ... D₃):</div>
+            <div id="sr-parallel-bits" style="display:flex;gap:var(--s-3);justify-content:center;flex-wrap:wrap;">
+              <!-- Generated by JS -->
+            </div>
+          </div>
+          
+          <h4>Καταχωρητής (FF₀ → FF₃)</h4>
+          <div class="ff-led-row" id="sr-ff-row">
+            <!-- Generated by JS -->
+          </div>
+          
+          <!-- Output display -->
+          <div id="sr-output" style="text-align:center;padding:var(--s-3);background:var(--c-bg-soft);border-radius:var(--r-md);font-family:var(--f-mono);">
+            <span style="font-weight:700;font-size:0.9rem;">Έξοδος:</span> <span id="sr-out-val" style="font-size:1.2rem;font-weight:700;color:var(--c-primary);">0000</span>
+          </div>
+          
+          <div class="clock-controls">
+            <button class="btn btn--primary" id="sr-clock">⏱ CLOCK</button>
+            <button class="btn" id="sr-load" style="display:none;">📥 LOAD</button>
+            <button class="btn" id="sr-reset">🔄 Reset</button>
+            <span class="mono muted" id="sr-pulses">Παλμοί: 0</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="ring">
+        <div class="section-divider"><span class="badge">03</span></div>
+        <h2>Κυκλικός Απαριθμητής (Ring Counter)</h2>
+        <p>
+          Ο <strong>Ring Counter</strong> είναι ένας κυκλικός ολισθητής με <strong>μόνο ένα 1
+          και τα υπόλοιπα bits 0</strong>. Το 1 περιφέρεται από FF σε FF σε κάθε παλμό ρολογιού.
+        </p>
+        <p>Παράδειγμα 4-bit Ring Counter:</p>
+        <table>
+          <thead><tr><th>Παλμός</th><th>Q₀</th><th>Q₁</th><th>Q₂</th><th>Q₃</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+            <tr><td>2</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+            <tr><td>3</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+            <tr><td>4</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+            <tr><td>5</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+          </tbody>
+        </table>
+        
+        <div class="formula-block">
+          <div class="formula formula--big">f<sub>Q</sub> = f<sub>CLK</sub> / N</div>
+        </div>
+        <p style="font-size:0.95rem;">
+          Όπου N = αριθμός FF. Για 4 FF, η συχνότητα κάθε εξόδου είναι f<sub>CLK</sub>/4.
+        </p>
+      </section>
+
+      <section id="johnson">
+        <div class="section-divider"><span class="badge">04</span></div>
+        <h2>Απαριθμητής Johnson</h2>
+        <p>
+          Ο <strong>Johnson Counter</strong> (ή twisted ring counter) είναι κυκλικός ολισθητής
+          όπου η <strong>συμπληρωματική έξοδος του τελευταίου FF</strong> τροφοδοτείται στην είσοδο
+          του πρώτου. Παράγει διπλάσιες καταστάσεις από τον Ring Counter.
+        </p>
+        <p>Παράδειγμα 4-bit Johnson Counter (8 καταστάσεις):</p>
+        <table>
+          <thead><tr><th>Παλμός</th><th>Q₀</th><th>Q₁</th><th>Q₂</th><th>Q₃</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+            <tr><td>2</td><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+            <tr><td>3</td><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+            <tr><td>4</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+            <tr><td>5</td><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+            <tr><td>6</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+            <tr><td>7</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+            <tr><td>8</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+          </tbody>
+        </table>
+        
+        <div class="formula-block">
+          <div class="formula formula--big">f<sub>Q</sub> = f<sub>CLK</sub> / 2N</div>
+        </div>
+      </section>
+
+      <section id="diadrastiko-ring">
+        <div class="section-divider"><span class="badge">🎮</span></div>
+        <h2>Διαδραστικό: Ring vs Johnson</h2>
+        
+        <div class="interactive">
+          <span class="interactive-label">Σύγκρινε τους δύο</span>
+          <h3>Δες την ακολουθία να εξελίσσεται</h3>
+          <p class="interactive-explainer">
+            Επίλεξε <strong>Ring</strong> ή <strong>Johnson</strong> και πάτα Auto. Παρατήρησε
+            τη διαφορά: ο Ring έχει N καταστάσεις, ο Johnson έχει 2N.
+          </p>
+          
+          <div class="sliders">
+            <div class="slider-row">
+              <label for="rj-type">Τύπος</label>
+              <select id="rj-type" class="select-input" style="grid-column: 2 / span 2;">
+                <option value="ring">🔵 Ring Counter</option>
+                <option value="johnson">🔄 Johnson Counter</option>
+              </select>
+            </div>
+            <div class="slider-row">
+              <label for="rj-N">Αριθμός FF (N)</label>
+              <input type="range" id="rj-N" min="3" max="6" step="1" value="4">
+              <output id="rj-N-val" class="mono">4</output>
+            </div>
+          </div>
+          
+          <div class="results-grid">
+            <div class="result-card"><div class="result-label">Διαφορετικές καταστάσεις</div><div class="result-value" id="rj-states">4</div></div>
+            <div class="result-card"><div class="result-label">f_Q / f_CLK</div><div class="result-value" id="rj-freq">1/4</div></div>
+            <div class="result-card"><div class="result-label">Παλμοί</div><div class="result-value" id="rj-pulses">0</div></div>
+          </div>
+          
+          <h4>Καταχωρητής</h4>
+          <div class="ff-led-row" id="rj-ff-row">
+            <!-- Generated by JS -->
+          </div>
+          
+          <div class="clock-controls">
+            <button class="btn btn--primary" id="rj-clock">⏱ Παλμός</button>
+            <button class="btn" id="rj-auto">▶️ Auto</button>
+            <button class="btn" id="rj-reset">🔄 Reset</button>
+          </div>
+
+          <h4 style="margin-top: var(--s-5);">Χρονικό διάγραμμα</h4>
+          <div class="timing-canvas-wrap">
+            <canvas class="timing-canvas" id="rj-canvas" width="800" height="240"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <section id="multiply">
+        <div class="section-divider"><span class="badge">05</span></div>
+        <h2>Πολλαπλασιασμός / Διαίρεση με Ολίσθηση</h2>
+        <p>
+          Μια εξαιρετική ιδιότητα του δυαδικού συστήματος: <strong>η ολίσθηση των bits ισοδυναμεί
+          με πολλαπλασιασμό ή διαίρεση επί 2</strong>.
+        </p>
+        
+        <div class="cat-grid">
+          <div class="cat-card">
+            <div class="cat-icon" style="background:#d6ffe4;">⬅️</div>
+            <h3>Shift Left × 2</h3>
+            <p>Π.χ. <code>0011</code> (3) → <code>0110</code> (6)</p>
+            <p>Κάθε ολίσθηση αριστερά διπλασιάζει τον αριθμό.</p>
+          </div>
+          <div class="cat-card">
+            <div class="cat-icon" style="background:#ffd6d6;">➡️</div>
+            <h3>Shift Right ÷ 2</h3>
+            <p>Π.χ. <code>1000</code> (8) → <code>0100</code> (4)</p>
+            <p>Κάθε ολίσθηση δεξιά υποδιπλασιάζει τον αριθμό.</p>
+          </div>
+        </div>
+
+        <div class="callout callout--tip">
+          <div class="callout-title">⚡ Γιατί έχει σημασία;</div>
+          <p style="margin: 0;">
+            Η ολίσθηση είναι <strong>πολύ πιο γρήγορη</strong> από κανονικό πολλαπλασιασμό
+            σε υλικό. Γι' αυτό οι επεξεργαστές χρησιμοποιούν shift operations για να
+            βελτιστοποιούν αριθμητικές πράξεις δυνάμεων του 2.
+          </p>
+        </div>
+      </section>
+
+      <section id="diadrastiko-mult">
+        <div class="section-divider"><span class="badge">🎮</span></div>
+        <h2>Διαδραστικό: Shift = Πολλαπλασιασμός/Διαίρεση</h2>
+        
+        <div class="interactive">
+          <span class="interactive-label">Δοκίμασε ολίσθηση</span>
+          <h3>Δες πώς αλλάζει η δεκαδική τιμή</h3>
+          <p class="interactive-explainer">
+            Πάτα τα bits για να φτιάξεις έναν αριθμό. Μετά πάτα <strong>Shift Left</strong>
+            (×2) ή <strong>Shift Right</strong> (÷2) και δες πώς αλλάζει η τιμή.
+          </p>
+          
+          <h4>Φτιάξε αριθμό:</h4>
+          <div id="ms-bit-input" style="display:flex;gap:var(--s-3);justify-content:center;padding:var(--s-3);background:var(--c-bg-soft);border:2px dashed var(--c-ink);border-radius:var(--r-md);">
+            <!-- Generated by JS -->
+          </div>
+          
+          <div class="results-grid">
+            <div class="result-card"><div class="result-label">Δυαδικός</div><div class="result-value mono" id="ms-bin" style="font-size:1.4rem;">00000110</div></div>
+            <div class="result-card" style="background:var(--c-bg-soft);"><div class="result-label">Δεκαδικός</div><div class="result-value" id="ms-dec">6</div></div>
+            <div class="result-card"><div class="result-label">Δεκαεξαδικός</div><div class="result-value mono" id="ms-hex">0x06</div></div>
+          </div>
+          
+          <div class="clock-controls">
+            <button class="btn btn--primary" id="ms-left">⬅️ Shift Left (×2)</button>
+            <button class="btn btn--primary" id="ms-right">➡️ Shift Right (÷2)</button>
+            <button class="btn" id="ms-reset">🔄 Reset</button>
+          </div>
+          
+          <div id="ms-history" style="margin-top:var(--s-4);padding:var(--s-3);background:var(--c-bg-soft);border-radius:var(--r-md);font-family:var(--f-mono);font-size:0.9rem;max-height:120px;overflow-y:auto;">
+            <strong>Ιστορικό:</strong>
+            <div id="ms-log" style="margin-top:8px;color:var(--c-ink-soft);"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="efarmoges">
+        <div class="section-divider"><span class="badge">06</span></div>
+        <h2>Τυπικές Εφαρμογές</h2>
+        <ol>
+          <li><strong>Στοιχεία μνήμης</strong>: Αποθήκευση πληροφοριών (κάθε καταχωρητής CPU)</li>
+          <li><strong>Κυκλικοί απαριθμητές</strong>: Παραγωγή ωρολογιακών παλμών σε συγκεκριμένη μορφή και διαίρεση συχνότητας</li>
+          <li><strong>Κυκλώματα χρονικής καθυστέρησης</strong>: Καθυστέρηση μεταφοράς δεδομένων για συγχρονισμό</li>
+          <li><strong>Μετατροπή σειριακό ↔ παράλληλο</strong>: Τα κυκλώματα <strong>UART</strong> χρησιμοποιούν καταχωρητές για επικοινωνία</li>
+          <li><strong>Αριθμητικές πράξεις</strong>: Πολλαπλασιασμός και διαίρεση δυνάμεων του 2 με ολίσθηση</li>
+        </ol>
+      </section>
+
+      <section id="pdf">
+        <div class="section-divider"><span class="badge">07</span></div>
+        <h2>📄 Διαφάνειες &amp; Σημειώσεις</h2>
+        
+                <div class="pdf-embed-wrap" style="padding: var(--s-5); text-align: center;">
+          <p style="font-family: var(--f-mono); color: var(--c-muted); font-size: 0.95rem;">
+            📚 Οι διαφάνειες και χειρόγραφες σημειώσεις είναι διαθέσιμες <strong>στην τάξη</strong> από την/τον εκπαιδευτικό σου.
+          </p>
+        </div>
+      </section>
+
+      <nav style="display: flex; justify-content: space-between; margin-top: var(--s-8); padding-top: var(--s-5); border-top: 2px dashed var(--c-shadow); gap: var(--s-3); flex-wrap: wrap;">
+        <a href="apariomites.html" class="btn">← Απαριθμητές</a>
+        <a href="kodikopoiites.html" class="btn btn--primary">Επόμενο: Κωδικοποιητές →</a>
+      </nav>
+      
+    </main>
+  </div>
+
+    <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        
+        <div class="footer-col">
+          <div class="footer-mark">Ψ Psifiaka Lab</div>
+          <p>Δωρεάν εκπαιδευτικό υλικό για Ψηφιακά Ηλεκτρονικά ΙΙ Γ' Λυκείου.</p>
+          <p style="margin-top:0.5rem; font-size:0.85rem; opacity:0.85;">Παγκύπριες Εξετάσεις • Τεχνική Σχολή</p>
+        </div>
+        
+        <div class="footer-col">
+          <h4 class="footer-title">Φροντιστήριο</h4>
+          <p style="font-size:0.92rem;">Ιδιαίτερα μαθήματα Πληροφορικής &amp; Ψηφιακών Ηλεκτρονικών για Παγκύπριες Εξετάσεις (Α΄ Β΄ Γ΄ Λυκείου).</p>
+          <a href="https://www.antreassotiriou.com/" target="_blank" rel="noopener" class="footer-link footer-link--cta">
+            🌐 antreassotiriou.com
+          </a>
+        </div>
+        
+        <div class="footer-col">
+          <h4 class="footer-title">Social Media</h4>
+          <ul class="footer-social">
+            <li>
+              <a href="https://www.facebook.com/profile.php?id=61583083336971" target="_blank" rel="noopener" aria-label="Facebook">
+                <span class="social-icon">📘</span> Facebook
+              </a>
+            </li>
+            <li>
+              <a href="https://www.instagram.com/pagkypriesonline/" target="_blank" rel="noopener" aria-label="Instagram">
+                <span class="social-icon">📸</span> Instagram
+              </a>
+            </li>
+            <li>
+              <a href="https://www.tiktok.com/@pagkypriesonline" target="_blank" rel="noopener" aria-label="TikTok">
+                <span class="social-icon">🎵</span> TikTok
+              </a>
+            </li>
+            <li>
+              <a href="https://share.google/84mqAqnpcEjChqpGW" target="_blank" rel="noopener" aria-label="Google Business">
+                <span class="social-icon">📍</span> Google Business
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+      </div>
+      
+      <div class="footer-bottom">
+        <p class="muted" style="font-size: 0.85rem;">© 2026 Psifiaka Lab • Powered by <a href="https://www.antreassotiriou.com/" target="_blank" rel="noopener" style="color:var(--c-primary); text-decoration:none; font-weight:600;">Antreas Sotiriou eLearning</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/script.js"></script>
+  <script src="assets/registers.js"></script>
+</body>
+</html>
