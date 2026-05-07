@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- ==================== SEO ==================== -->
+  <title>Πολυδονητές (Multivibrators) — Ασταθής, Μονοσταθής, Σκανδάλη Σμιτ | Psifiaka Lab</title>
+  <meta name="description" content="Πλήρης θεωρία για ασταθείς, μονοσταθείς πολυδονητές και Σκανδάλη Σμιτ με IC 555. Διαδραστικές προσομοιώσεις με ρυθμιζόμενες τιμές R, C. Ψηφιακά Ηλεκτρονικά ΙΙ Γ' Λυκείου.">
+  <meta name="keywords" content="πολυδονητές, ασταθής, μονοσταθής, IC 555, σκανδάλη Σμιτ, Schmitt trigger, RC κύκλωμα, χρόνος βολής, κύκλος δράσης">
+  <link rel="canonical" href="https://psifiakalab.com/kyklomata-palmon.html">
+  
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="el_GR">
+  <meta property="og:title" content="Πολυδονητές — Ασταθής, Μονοσταθής, Σκανδάλη Σμιτ">
+  <meta property="og:description" content="Διαδραστικές προσομοιώσεις πολυδονητών με IC 555.">
+  <meta property="og:url" content="https://psifiakalab.com/kyklomata-palmon.html">
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LearningResource",
+    "name": "Κυκλώματα Παραγωγής Παλμών — Πολυδονητές",
+    "description": "Θεωρία και διαδραστικές ασκήσεις για πολυδονητές με IC 555 και σκανδάλη Σμιτ",
+    "educationalLevel": "Γ' Λυκείου",
+    "inLanguage": "el",
+    "learningResourceType": "Interactive lesson",
+    "isPartOf": { "@type": "Course", "name": "Ψηφιακά Ηλεκτρονικά ΙΙ" }
+  }
+  </script>
+  
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23ff5c39'/%3E%3Ctext x='50' y='68' font-family='monospace' font-size='55' font-weight='700' text-anchor='middle' fill='%231a1d2e'%3EΨ%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="assets/chapter-extras.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <nav class="nav-bar" aria-label="Κύρια πλοήγηση">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">Ψ</span>
+        <span>Psifiaka Lab</span>
+      </a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav">Μενού ☰</button>
+      <ul class="nav-list" id="primary-nav">
+        <li><a href="index.html">Αρχική</a></li>
+        <li><a href="flip-flop.html">1. Φλιπ-Φλοπ</a></li>
+        <li><a href="kyklomata-palmon.html">2. Πολυδονητές</a></li>
+        <li><a href="logikes-oikogeneies.html">3. Λογικές Οικογένειες</a></li>
+        <li><a href="apariomites.html">4. Απαριθμητές</a></li>
+        <li><a href="kataxoritres.html">5. Καταχωρητές</a></li>
+        <li><a href="kodikopoiites.html">6. Κωδικοποιητές</a></li>
+        <li><a href="sygkrites.html">7. Συγκριτές</a></li>
+        <li><a href="psifio-isotimias.html">8. Ψηφίο Ισοτιμίας</a></li>
+        <li><a href="polyplektes.html">9. Πολυπλέκτες</a></li>
+        <li><a href="metatropes-da-ad.html">10. Μετατροπείς D/A &amp; A/D</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="chapter-layout">
+    
+    <aside class="chapter-sidebar">
+      <h4>Σε αυτό το κεφάλαιο</h4>
+      <ul>
+        <li><a href="#eisagogi">Εισαγωγή</a></li>
+        <li><a href="#kathgories">3 Κατηγορίες</a></li>
+        <li><a href="#astathis">Ασταθής Πολυδονητής</a></li>
+        <li><a href="#diadrastiko-astathis">🎮 Διαδραστικό IC 555</a></li>
+        <li><a href="#monostathis">Μονοσταθής Πολυδονητής</a></li>
+        <li><a href="#diadrastiko-monostathis">🎮 Διαδραστικό Μονοσταθή</a></li>
+        <li><a href="#smitt">Σκανδάλη Σμιτ</a></li>
+        <li><a href="#diadrastiko-smitt">🎮 Διαδραστικός Σμιτ</a></li>
+        <li><a href="#efarmoges">Εφαρμογές</a></li>
+        <li><a href="#pdf">📄 Διαφάνειες (PDF)</a></li>
+      </ul>
+    </aside>
+
+    <main class="chapter-content">
+      
+      <header class="chapter-hero">
+        <span class="chapter-num">Κεφάλαιο 02</span>
+        <h1>Κυκλώματα Παραγωγής &amp; Διαμόρφωσης Παλμών</h1>
+        <p class="lede">
+          Οι <strong>πολυδονητές</strong> είναι κυκλώματα που παράγουν ή διαμορφώνουν
+          ορθογώνιους παλμούς. Είναι η <strong>καρδιά</strong> που χτυπά τον ρυθμό
+          σε κάθε ψηφιακό σύστημα — από το ρολόι του υπολογιστή σου μέχρι το LED που αναβοσβήνει.
+        </p>
+      </header>
+
+      <!-- ===== ΕΙΣΑΓΩΓΗ ===== -->
+      <section id="eisagogi">
+        <div class="section-divider"><span class="badge">01</span></div>
+        <h2>Τι είναι ο πολυδονητής;</h2>
+        <p>
+          Ένας <strong>πολυδονητής</strong> είναι ένα ηλεκτρονικό κύκλωμα που
+          έχει <strong>δύο καταστάσεις εξόδου</strong>: λογικό 0 (LOW) και λογικό 1 (HIGH).
+          Ανάλογα με το πόσο σταθερές είναι αυτές οι δύο καταστάσεις, χωρίζουμε τους
+          πολυδονητές σε τρεις κατηγορίες.
+        </p>
+        
+        <div class="callout callout--info">
+          <div class="callout-title">💡 Γιατί χρειαζόμαστε πολυδονητές;</div>
+          <p style="margin: 0;">
+            Κάθε ψηφιακό κύκλωμα χρειάζεται έναν <strong>παλμό ρολογιού (clock)</strong>
+            για να συγχρονίσει τη λειτουργία του. Ο πολυδονητής είναι ακριβώς αυτό:
+            μια <em>γεννήτρια ορθογώνιων παλμών</em>.
+          </p>
+        </div>
+      </section>
+
+      <!-- ===== ΚΑΤΗΓΟΡΙΕΣ ===== -->
+      <section id="kathgories">
+        <div class="section-divider"><span class="badge">02</span></div>
+        <h2>Οι 3 Κατηγορίες Πολυδονητών</h2>
+        
+        <div class="cat-grid">
+          <div class="cat-card">
+            <div class="cat-icon" style="background:#ffe4d6;">🔁</div>
+            <h3>Ασταθής</h3>
+            <p><strong>Καμία</strong> κατάσταση δεν είναι σταθερή.</p>
+            <p>Παράγει συνεχείς ορθογώνιους παλμούς — λειτουργεί σαν <strong>ρολόι (clock)</strong>.</p>
+          </div>
+          <div class="cat-card">
+            <div class="cat-icon" style="background:#d6e4ff;">⚡</div>
+            <h3>Μονοσταθής</h3>
+            <p><strong>Μία</strong> κατάσταση είναι σταθερή.</p>
+            <p>Με ένα παλμό σκανδαλισμού, παράγει ένα παλμό συγκεκριμένου χρόνου και επιστρέφει.</p>
+          </div>
+          <div class="cat-card">
+            <div class="cat-icon" style="background:#d6ffe4;">🔒</div>
+            <h3>Δισταθής</h3>
+            <p><strong>Δύο</strong> καταστάσεις σταθερές.</p>
+            <p>Είναι ουσιαστικά ένα <strong>Φλιπ-Φλοπ</strong> — αποθηκεύει 1 bit (Κεφάλαιο 1).</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== ΑΣΤΑΘΗΣ ===== -->
+      <section id="astathis">
+        <div class="section-divider"><span class="badge">03</span></div>
+        <h2>Ασταθής Πολυδονητής με IC 555</h2>
+        <p>
+          Το <strong>IC 555</strong> είναι ένα από τα πιο διάσημα ολοκληρωμένα κυκλώματα
+          στην ιστορία της ηλεκτρονικής. Με δύο αντιστάσεις <code>R₁</code>, <code>R₂</code>
+          και έναν πυκνωτή <code>C</code>, μετατρέπεται σε ασταθή πολυδονητή
+          που παράγει ορθογώνιους παλμούς.
+        </p>
+        
+        <h3>Οι τύποι που πρέπει να ξέρεις</h3>
+        <div class="formula-block">
+          <div class="formula"><span class="f-label">Χρόνος HIGH:</span> t<sub>H</sub> = 0,693 · (R₁ + R₂) · C</div>
+          <div class="formula"><span class="f-label">Χρόνος LOW:</span> t<sub>L</sub> = 0,693 · R₂ · C</div>
+          <div class="formula"><span class="f-label">Περίοδος:</span> T = t<sub>H</sub> + t<sub>L</sub></div>
+          <div class="formula"><span class="f-label">Συχνότητα:</span> f = 1 / T</div>
+          <div class="formula"><span class="f-label">Κύκλος δράσης:</span> D = t<sub>H</sub> / T · 100%</div>
+        </div>
+        
+        <div class="callout callout--tip">
+          <div class="callout-title">💭 Παρατήρηση</div>
+          <p style="margin: 0;">
+            Επειδή ο τύπος του t<sub>H</sub> έχει <strong>(R₁+R₂)</strong> και ο t<sub>L</sub>
+            μόνο <strong>R₂</strong>, ο χρόνος HIGH είναι <em>πάντα μεγαλύτερος</em> από τον χρόνο LOW.
+            Άρα ο κύκλος δράσης είναι πάντα <strong>μεγαλύτερος του 50%</strong>.
+          </p>
+        </div>
+      </section>
+
+      <!-- ===== ΔΙΑΔΡΑΣΤΙΚΟ ΑΣΤΑΘΗ ===== -->
+      <section id="diadrastiko-astathis">
+        <div class="section-divider"><span class="badge">🎮</span></div>
+        <h2>Διαδραστικό: Ασταθής με IC 555</h2>
+        
+        <div class="interactive">
+          <span class="interactive-label">Sliders ρυθμιζόμενοι</span>
+          <h3>Σχεδίασε τον πολυδονητή σου</h3>
+          <p class="interactive-explainer">
+            Ρύθμισε τις τιμές των <strong>R₁</strong>, <strong>R₂</strong> και <strong>C</strong>.
+            Δες ζωντανά τη συχνότητα, τον κύκλο δράσης και το χρονικό διάγραμμα.
+            Δοκίμασε να φτιάξεις ένα ρολόι 1 kHz!
+          </p>
+          
+          <div class="sliders">
+            <div class="slider-row">
+              <label for="ast-R1">R₁ <span class="muted">(kΩ)</span></label>
+              <input type="range" id="ast-R1" min="1" max="100" value="10" step="1">
+              <output id="ast-R1-val" class="mono">10 kΩ</output>
+            </div>
+            <div class="slider-row">
+              <label for="ast-R2">R₂ <span class="muted">(kΩ)</span></label>
+              <input type="range" id="ast-R2" min="1" max="100" value="10" step="1">
+              <output id="ast-R2-val" class="mono">10 kΩ</output>
+            </div>
+            <div class="slider-row">
+              <label for="ast-C">C <span class="muted">(nF)</span></label>
+              <input type="range" id="ast-C" min="10" max="1000" value="100" step="10">
+              <output id="ast-C-val" class="mono">100 nF</output>
+            </div>
+          </div>
+          
+          <div class="results-grid">
+            <div class="result-card">
+              <div class="result-label">Συχνότητα</div>
+              <div class="result-value" id="ast-freq">—</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Περίοδος T</div>
+              <div class="result-value" id="ast-period">—</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">t<sub>H</sub> (HIGH)</div>
+              <div class="result-value" id="ast-tH">—</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">t<sub>L</sub> (LOW)</div>
+              <div class="result-value" id="ast-tL">—</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Κύκλος δράσης</div>
+              <div class="result-value" id="ast-duty">—</div>
+            </div>
+          </div>
+          
+          <h4 style="margin-top: var(--s-5);">Χρονικό διάγραμμα εξόδου</h4>
+          <div class="timing-canvas-wrap">
+            <canvas class="timing-canvas" id="ast-canvas" width="800" height="180"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== ΜΟΝΟΣΤΑΘΗΣ ===== -->
+      <section id="monostathis">
+        <div class="section-divider"><span class="badge">04</span></div>
+        <h2>Μονοσταθής Πολυδονητής (One-Shot)</h2>
+        <p>
+          Ο μονοσταθής πολυδονητής έχει <strong>μία σταθερή κατάσταση</strong>
+          (συνήθως LOW). Όταν δεχτεί έναν παλμό σκανδαλισμού στην είσοδο,
+          η έξοδός του "πετάγεται" στο HIGH για ένα συγκεκριμένο
+          <strong>χρόνο βολής (pulse width)</strong>, και μετά επιστρέφει στο LOW.
+        </p>
+        
+        <h3>Ο τύπος του χρόνου βολής (με IC 555)</h3>
+        <div class="formula-block">
+          <div class="formula formula--big">t = 1,1 · R · C</div>
+        </div>
+        
+        <h3>Δύο υποκατηγορίες:</h3>
+        <ul>
+          <li>
+            <strong>Μη-επαναδιεγειρόμενος</strong>: Αγνοεί τους παλμούς σκανδαλισμού
+            που έρχονται όσο ο πολυδονητής είναι ακόμα στο HIGH. Πρέπει να επιστρέψει
+            στο LOW για να ξανασκανδαλιστεί.
+          </li>
+          <li>
+            <strong>Επαναδιεγειρόμενος</strong>: Αν έρθει νέος παλμός σκανδαλισμού
+            ενώ είναι ακόμα στο HIGH, <strong>επαναμετράει τον χρόνο</strong> από την αρχή.
+            Έτσι παρατείνει τη διάρκεια του παλμού εξόδου.
+          </li>
+        </ul>
+      </section>
+
+      <!-- ===== ΔΙΑΔΡΑΣΤΙΚΟ ΜΟΝΟΣΤΑΘΗ ===== -->
+      <section id="diadrastiko-monostathis">
+        <div class="section-divider"><span class="badge">🎮</span></div>
+        <h2>Διαδραστικό: Μονοσταθής Πολυδονητής</h2>
+        
+        <div class="interactive">
+          <span class="interactive-label">Πάτα το trigger!</span>
+          <h3>Δες τον χρόνο βολής να μετράει</h3>
+          <p class="interactive-explainer">
+            Ρύθμισε <strong>R</strong> και <strong>C</strong>, και πάτα το κουμπί
+            <strong>TRIGGER</strong>. Παρατήρησε πώς η έξοδος μένει HIGH για χρόνο
+            <code>t = 1,1·RC</code> και μετά επιστρέφει στο LOW.
+          </p>
+          
+          <div class="sliders">
+            <div class="slider-row">
+              <label for="mon-R">R <span class="muted">(kΩ)</span></label>
+              <input type="range" id="mon-R" min="1" max="200" value="50" step="1">
+              <output id="mon-R-val" class="mono">50 kΩ</output>
+            </div>
+            <div class="slider-row">
+              <label for="mon-C">C <span class="muted">(nF)</span></label>
+              <input type="range" id="mon-C" min="10" max="1000" value="100" step="10">
+              <output id="mon-C-val" class="mono">100 nF</output>
+            </div>
+          </div>
+          
+          <div class="results-grid">
+            <div class="result-card">
+              <div class="result-label">Χρόνος βολής t</div>
+              <div class="result-value" id="mon-time">—</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Κατάσταση εξόδου</div>
+              <div class="result-value" id="mon-state">LOW</div>
+            </div>
+          </div>
+          
+          <div class="clock-controls">
+            <button class="btn btn--primary" id="mon-trigger">⚡ TRIGGER</button>
+            <button class="btn" id="mon-reset">🔄 Reset</button>
+          </div>
+          
+          <h4 style="margin-top: var(--s-5);">Χρονικό διάγραμμα</h4>
+          <div class="timing-canvas-wrap">
+            <canvas class="timing-canvas" id="mon-canvas" width="800" height="200"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== ΣΚΑΝΔΑΛΗ ΣΜΙΤ ===== -->
+      <section id="smitt">
+        <div class="section-divider"><span class="badge">05</span></div>
+        <h2>Σκανδάλη Σμιτ (Schmitt Trigger)</h2>
+        <p>
+          Η <strong>Σκανδάλη Σμιτ</strong> είναι ένα ειδικό κύκλωμα-διακόπτης που
+          έχει <strong>δύο διαφορετικές τάσεις κατωφλίου</strong>:
+        </p>
+        <ul>
+          <li><strong>V<sub>H</sub></strong> (άνω κατώφλι): η τάση πάνω από την οποία η έξοδος αλλάζει</li>
+          <li><strong>V<sub>L</sub></strong> (κάτω κατώφλι): η τάση κάτω από την οποία η έξοδος αλλάζει πάλι</li>
+        </ul>
+        <p>
+          Η διαφορά <code>V<sub>H</sub> − V<sub>L</sub></code> ονομάζεται <strong>υστέρηση</strong>
+          και είναι αυτή που προστατεύει το κύκλωμα από θόρυβο.
+        </p>
+
+        <h3>Κανόνες λειτουργίας (ανάστροφη πόλωση):</h3>
+        <ul>
+          <li>Αν το σήμα εισόδου <strong>ανεβαίνοντας</strong> ξεπεράσει την V<sub>H</sub> → η έξοδος πάει στο <code>0</code></li>
+          <li>Αν το σήμα εισόδου <strong>κατεβαίνοντας</strong> πέσει κάτω από την V<sub>L</sub> → η έξοδος πάει στο <code>1</code></li>
+        </ul>
+
+        <div class="callout callout--info">
+          <div class="callout-title">💡 Γιατί είναι χρήσιμη;</div>
+          <p style="margin: 0;">
+            Με τη Σκανδάλη Σμιτ μπορείς να μετατρέψεις <strong>οποιοδήποτε σήμα</strong>
+            (ημίτονο, παλμό με αργές αλλαγές, θορυβώδες σήμα) σε <strong>καθαρούς ορθογώνιους παλμούς</strong>
+            με κάθετα μέτωπα.
+          </p>
+        </div>
+      </section>
+
+      <!-- ===== ΔΙΑΔΡΑΣΤΙΚΟ ΣΜΙΤ ===== -->
+      <section id="diadrastiko-smitt">
+        <div class="section-divider"><span class="badge">🎮</span></div>
+        <h2>Διαδραστικό: Σκανδάλη Σμιτ</h2>
+        
+        <div class="interactive">
+          <span class="interactive-label">Δες την υστέρηση ζωντανά</span>
+          <h3>Από ημίτονο σε ορθογώνιο</h3>
+          <p class="interactive-explainer">
+            Ρύθμισε τα δύο κατώφλια V<sub>H</sub> και V<sub>L</sub>. Δες πώς το θορυβώδες
+            ημιτονοειδές σήμα εισόδου (μπλε) γίνεται καθαρό ορθογώνιο σήμα στην έξοδο
+            (πορτοκαλί). Παρατήρησε πώς η <strong>υστέρηση</strong> (η ζώνη μεταξύ
+            V<sub>L</sub> και V<sub>H</sub>) εμποδίζει τις γρήγορες αλλαγές από θόρυβο.
+          </p>
+          
+          <div class="sliders">
+            <div class="slider-row">
+              <label for="smt-VH">V<sub>H</sub> <span class="muted">(άνω κατώφλι)</span></label>
+              <input type="range" id="smt-VH" min="0.5" max="4.5" value="3.5" step="0.1">
+              <output id="smt-VH-val" class="mono">3.5 V</output>
+            </div>
+            <div class="slider-row">
+              <label for="smt-VL">V<sub>L</sub> <span class="muted">(κάτω κατώφλι)</span></label>
+              <input type="range" id="smt-VL" min="0.5" max="4.5" value="1.5" step="0.1">
+              <output id="smt-VL-val" class="mono">1.5 V</output>
+            </div>
+            <div class="slider-row">
+              <label for="smt-noise">Θόρυβος</label>
+              <input type="range" id="smt-noise" min="0" max="100" value="20" step="5">
+              <output id="smt-noise-val" class="mono">20%</output>
+            </div>
+          </div>
+          
+          <div class="results-grid">
+            <div class="result-card">
+              <div class="result-label">Υστέρηση</div>
+              <div class="result-value" id="smt-hyst">—</div>
+            </div>
+            <div class="result-card">
+              <div class="result-label">Πόλωση</div>
+              <div class="result-value">
+                <select id="smt-mode" class="select-input">
+                  <option value="inverting">Ανάστροφη</option>
+                  <option value="non-inverting">Ορθή</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <div class="timing-canvas-wrap">
+            <canvas class="timing-canvas" id="smt-canvas" width="800" height="280" style="height: 280px;"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== ΕΦΑΡΜΟΓΕΣ ===== -->
+      <section id="efarmoges">
+        <div class="section-divider"><span class="badge">06</span></div>
+        <h2>Τυπικές Εφαρμογές</h2>
+        
+        <h3>Ασταθούς πολυδονητή:</h3>
+        <ul>
+          <li>Παραγωγή σήματος ρολογιού (clock) για ψηφιακά κυκλώματα</li>
+          <li>Κυκλώματα μέτρησης χρόνου</li>
+          <li>Φλας ή LED που αναβοσβήνει</li>
+          <li>Παραγωγή ηχητικών συχνοτήτων (buzzer)</li>
+        </ul>
+        
+        <h3>Μονοσταθούς πολυδονητή:</h3>
+        <ul>
+          <li>Κύκλωμα χρονοκαθυστέρησης (delay timer)</li>
+          <li>Παραγωγή παλμού σταθερής διάρκειας από οποιαδήποτε είσοδο</li>
+          <li>Anti-bounce κύκλωμα για διακόπτες</li>
+        </ul>
+        
+        <h3>Σκανδάλης Σμιτ:</h3>
+        <ul>
+          <li>Ρυθμιζόμενος διακόπτης με υστέρηση (απορρόφηση θορύβου)</li>
+          <li>Παραγωγή ορθογώνιων παλμών από ημίτονο ή τριγωνικό σήμα</li>
+          <li>Αποκατάσταση παλμών με αργά μέτωπα</li>
+        </ul>
+      </section>
+
+      <!-- ===== PDF ===== -->
+      <section id="pdf">
+        <div class="section-divider"><span class="badge">07</span></div>
+        <h2>📄 Διαφάνειες &amp; Σημειώσεις</h2>
+        
+                <div class="pdf-embed-wrap" style="padding: var(--s-5); text-align: center;">
+          <p style="font-family: var(--f-mono); color: var(--c-muted); font-size: 0.95rem;">
+            📚 Οι διαφάνειες και χειρόγραφες σημειώσεις είναι διαθέσιμες <strong>στην τάξη</strong> από την/τον εκπαιδευτικό σου.
+          </p>
+        </div>
+      </section>
+
+      <nav style="display: flex; justify-content: space-between; margin-top: var(--s-8); padding-top: var(--s-5); border-top: 2px dashed var(--c-shadow); gap: var(--s-3); flex-wrap: wrap;">
+        <a href="flip-flop.html" class="btn">← Φλιπ-Φλοπ</a>
+        <a href="logikes-oikogeneies.html" class="btn btn--primary">Επόμενο: Λογικές Οικογένειες →</a>
+      </nav>
+      
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-mark">Ψ Psifiaka Lab</div>
+      <p>Δωρεάν εκπαιδευτικό υλικό για Ψηφιακά Ηλεκτρονικά ΙΙ Γ' Λυκείου.</p>
+      <p class="muted" style="font-size: 0.9rem;">© 2026 Psifiaka Lab</p>
+    </div>
+  </footer>
+
+  <script src="assets/script.js"></script>
+  <script src="assets/multivibrators.js"></script>
+</body>
+</html>
